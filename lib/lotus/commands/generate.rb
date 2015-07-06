@@ -32,7 +32,7 @@ module Lotus
         sanitize_input(app_name, name)
         @type     = type
 
-        @source   = Pathname.new(::File.dirname(__FILE__) + "/../generators/#{ @type }/").realpath
+        @source   = Pathname.new(File.join(__dir__, '..', 'generators', @type.to_s)).realpath
         @target   = Pathname.pwd.realpath
 
         @app      = Utils::String.new(@app_name).classify
