@@ -95,6 +95,9 @@ module Lotus
         require 'lotus/commands/generate'
         Lotus::Commands::Generate.new(type, app_name, name, environment, self).start
       end
+      rescue Lotus::Commands::Generate::Error => e
+        puts e.message
+        exit 1
     end
 
     require 'lotus/commands/db'

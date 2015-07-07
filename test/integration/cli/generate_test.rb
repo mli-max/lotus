@@ -60,6 +60,10 @@ template=#{ template_engine }
       `bundle exec lotus generate app #{ new_app_name } #{ new_options }`
     end
 
+    def generate_wrong_type
+      `bundle exec lotus generate wrong_type`
+    end
+
     def chdir_to_root
       Dir.chdir($pwd)
     end
@@ -269,6 +273,15 @@ template=#{ template_engine }
         @root.join('apps/unknown/templates/dashboard/index.html.erb').wont_be  :exist?
         @root.join('spec/unknown/controllers/dashboard/index_spec.rb').wont_be :exist?
         @root.join('spec/unknown/views/dashboard/index_spec.rb').wont_be       :exist?
+      end
+    end
+
+    describe 'Generation with wrong options' do
+      it "should raise exception and check output in rescue block" do
+        $stdout = StringIO.new
+        generate_wrong_type
+        p $stdout.string
+        $stdout.string.must_equal 'dd'
       end
     end
   end

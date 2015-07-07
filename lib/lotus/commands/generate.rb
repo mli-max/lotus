@@ -11,6 +11,7 @@ module Lotus
       # @api private
       GENERATORS_NAMESPACE = "Lotus::Generators::%s".freeze
       APP_ARCHITECTURE = 'app'.freeze
+      TYPES = %i(app action model migration).freeze
 
       # @since 0.3.0
       # @api private
@@ -24,6 +25,8 @@ module Lotus
       # @since 0.3.0
       # @api private
       def initialize(type, app_name, name, env, cli)
+        assert_type!(type)
+
         @cli      = cli
         @env      = env
         @name     = name
@@ -42,9 +45,6 @@ module Lotus
       # @api private
       def start
         generator.start
-      rescue Error => e
-        puts e.message
-        exit 1
       end
 
       # @since 0.3.0
@@ -71,6 +71,15 @@ module Lotus
       end
 
       private
+
+      # @since 0.5.0
+      # @api private
+      def assert_type!(type)
+        unless TYPES.include? type.to_sym
+          raise Error.new("Type should be one of: `#{ TYPES }'")
+        end
+      end
+
       # @since 0.3.0
       # @api private
       def generator
