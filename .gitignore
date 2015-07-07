@@ -23,3 +23,5 @@ mkmf.log
 .greenbar
 .DS_Store
 .lotusrc
+.ruby-version
+.ruby-gemset

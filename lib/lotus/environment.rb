@@ -1,6 +1,7 @@
 require 'thread'
 require 'pathname'
 require 'dotenv'
+require 'lotus/utils'
 require 'lotus/utils/hash'
 require 'lotus/lotusrc'
 
@@ -94,19 +95,19 @@ module Lotus
     # @api private
     CODE_RELOADING = { 'development' => true }.freeze
 
-    # @since x.x.x
+    # @since 0.4.0
     # @api private
     CONTAINER = 'container'.freeze
 
-    # @since x.x.x
+    # @since 0.4.0
     # @api private
     CONTAINER_PATH = 'apps'.freeze
 
-    # @since x.x.x
+    # @since 0.4.0
     # @api private
     APPLICATION = 'app'.freeze
 
-    # @since x.x.x
+    # @since 0.4.0
     # @api private
     APPLICATION_PATH = 'app'.freeze
 
@@ -335,7 +336,7 @@ module Lotus
     #
     # Eg <tt>require "config/environment"</tt>.
     #
-    # @since x.x.x
+    # @since 0.4.0
     # @api private
     def require_application_environment
       require env_config.to_s
@@ -360,10 +361,16 @@ module Lotus
     # @see Lotus::Commands::Server
     # @see Lotus::Environment::CODE_RELOADING
     def code_reloading?
-      @options.fetch(:code_reloading) { !!CODE_RELOADING[environment] }
+      # JRuby doesn't implement fork that's why shotgun cannot be used.
+      if Utils.jruby?
+        puts "JRuby doesn't support code reloading."
+        false
+      else
+        @options.fetch(:code_reloading) { !!CODE_RELOADING[environment] }
+      end
     end
 
-    # @since x.x.x
+    # @since 0.4.0
     # @api private
     def architecture
       @options.fetch(:architecture) {
@@ -372,13 +379,13 @@ module Lotus
       }
     end
 
-    # @since x.x.x
+    # @since 0.4.0
     # @api private
     def container?
       architecture == CONTAINER
     end
 
-    # @since x.x.x
+    # @since 0.4.0
     # @api private
     def apps_path
       @options.fetch(:path) {

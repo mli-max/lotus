@@ -119,8 +119,14 @@ module Lotus
 
         # Insert at the top of the file
         cli.insert_into_file _routes_path, before: /\A(.*)/ do
-          "get '/#{ @controller }', to: '#{ @name }'\n"
+          "get '#{ _route_url }', to: '#{ @name }'\n"
         end
+      end
+
+      # @since 0.4.0
+      # @api private
+      def _route_url
+        options.fetch(:url, "/#{ @controller }")
       end
 
       # @since 0.3.0
@@ -172,7 +178,7 @@ module Lotus
         spec_root.join(app_name.to_s, 'views', @controller, "#{ @action }_spec#{ SUFFIX }")
       end
 
-      # @since x.x.x
+      # @since 0.4.0
       # @api private
       def _relative_action_path
         result = '../../../'
@@ -181,7 +187,7 @@ module Lotus
         result
       end
 
-      # @since x.x.x
+      # @since 0.4.0
       # @api private
       def _relative_view_path
         result = '../../../'

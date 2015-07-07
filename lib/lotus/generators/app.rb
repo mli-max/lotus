@@ -21,7 +21,7 @@ module Lotus
 
       private
 
-      # @since x.x.x
+      # @since 0.4.0
       # @api private
       def assert_architecture!
         unless environment.container?
@@ -39,7 +39,7 @@ module Lotus
         }
       end
 
-      # @since x.x.x
+      # @since 0.4.0
       # @api private
       def application_base_url
         options[:application_base_url] || "/#{app_name}"
