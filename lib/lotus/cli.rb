@@ -81,24 +81,6 @@ module Lotus
       end
     end
 
-    # desc 'generate', 'generates app, action, model or migration'
-    # method_option :application_base_url, desc: 'application base url',                                      type: :string
-    # method_option :path,                 desc: 'applications path',                                         type: :string
-    # method_option :url,                  desc: 'relative URL for action',                                   type: :string
-    # method_option :skip_view,            desc: 'skip the creation of view and templates (only for action)', type: :boolean, default: false
-    # method_option :help, aliases: '-h',  desc: 'displays the usage method'
-
-    # # @since 0.3.0
-    # # @api private
-    # def generate(type = nil, app_name = nil, name = nil)
-    #   if options[:help] || (type.nil? && app_name.nil? && name.nil?)
-    #     invoke :help, ['generate']
-    #   else
-    #     require 'lotus/commands/generate'
-    #     Lotus::Commands::Generate.new(type, app_name, name, environment, self).start
-    #   end
-    # end
-
     register Lotus::Commands::Generate, 'generate', 'generate [SUBCOMMAND]', 'code generators'
     register Lotus::Commands::DB,       'db',       'db [SUBCOMMAND]',       'database operations'
 
