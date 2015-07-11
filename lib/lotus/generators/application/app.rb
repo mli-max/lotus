@@ -5,7 +5,7 @@ module Lotus
   module Generators
     module Application
       class App < Abstract
-        def initialize(command)
+        def initialize(command, environment)
           super
 
           @upcase_app_name       = app_name.to_env_s
