@@ -7,11 +7,11 @@ module Lotus
 
       # @since 0.3.1
       # @api private
-      def initialize(command)
+      def initialize(command, environment, name)
         super
 
         @model_name = Utils::String.new(name).classify
-        cli.class.source_root(source)
+        command.class.source_root(source)
       end
 
       # @since 0.3.1
@@ -42,7 +42,7 @@ module Lotus
         end
 
         templates.each do |src, dst|
-          cli.template(source.join(src), target.join(dst), opts)
+          command.template(source.join(src), target.join(dst), opts)
         end
       end
 

@@ -7,9 +7,9 @@ module Lotus
     module Application
       class Container < Abstract
         def initialize(command, environment)
-          super(command, environment)
+          super
 
-          @slice_generator       = Slice.new(command, environment)
+          @slice_generator       = Slice.new(command, environment, app_name)
           @lotus_head            = options.fetch(:lotus_head)
           @test                  = options[:test]
           @database              = options[:database]

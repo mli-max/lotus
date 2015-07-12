@@ -5,14 +5,16 @@ require 'lotus/generators/slice'
 module Lotus
   module Generators
     class App < Abstract
+      attr_reader :name
+
       def initialize(command, environment, name)
-        super(command, environment)
+        super
         assert_architecture!
 
         options.merge!(app_name_options)
-        @slice_generator = Slice.new(command)
+        @slice_generator = Slice.new(command, environment, name)
 
-        cli.class.source_root(source)
+        command.class.source_root(source)
       end
 
       def start
@@ -34,7 +36,7 @@ module Lotus
       # @api private
       def app_name_options
         {
-          application: app_name,
+          application: name,
           application_base_url: application_base_url
         }
       end
@@ -42,7 +44,7 @@ module Lotus
       # @since 0.4.0
       # @api private
       def application_base_url
-        options[:application_base_url] || "/#{app_name}"
+        options[:application_base_url] || "/#{name}"
       end
     end
   end

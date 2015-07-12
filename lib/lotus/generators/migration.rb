@@ -22,16 +22,16 @@ module Lotus
 
       # @since 0.4.0
       # @api private
-      def initialize(command)
+      def initialize(command, environment, name)
         super
 
         timestamp = Time.now.utc.strftime(TIMESTAMP_FORMAT)
         filename  = FILENAME % { timestamp: timestamp, name: name }
 
-        env.require_application_environment
+        environment.require_application_environment
         @destination = Lotus::Model.configuration.migrations.join(filename)
 
-        cli.class.source_root(source)
+        command.class.source_root(source)
       end
 
       # @since 0.4.0
@@ -42,7 +42,7 @@ module Lotus
         }
 
         templates.each do |src, dst|
-          cli.template(source.join(src), target.join(dst), {})
+          command.template(source.join(src), target.join(dst), {})
         end
       end
 

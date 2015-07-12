@@ -28,13 +28,13 @@ DESC
         if options[:help] || name.nil?
           invoke :help, ['app']
         else
-          require 'lotus/commands/generate/app'
-          Lotus::Commands::Generate::App.new(self, environment, name).start
+          require 'lotus/generators/app'
+          Lotus::Generators::App.new(self, environment, name).start
         end
       end
 
-      desc 'generate action [APP] ACTION', 'generate action'
-      desc 'action',                       'generate action'
+      desc 'generate web_action [APP] ACTION', 'generate web_action'
+      desc 'web_action',                       'generate web_action'
       long_desc <<-DESC
       Generate an action, a view, a template, a route and the relative unit test code.
 
@@ -52,7 +52,7 @@ DESC
 
       Container:
 
-        `lotus generate action web home#index`
+        `lotus generate web_action web home#index`
 
         Generates an action at `apps/web/controllers/home/index.rb`
 
@@ -65,7 +65,7 @@ DESC
 
       Application:
 
-        `lotus generate action home#index`
+        `lotus generate web_action home#index`
 
         Generates an action at `app/controllers/home/index.rb`
 
@@ -79,10 +79,10 @@ DESC
 
       def web_action(app_name = nil, name = nil)
         if options[:help] || name.nil?
-          invoke :help, ['action']
+          invoke :help, ['web_action']
         else
           require 'lotus/generators/action'
-          Lotus::Generators::Action.new(cli, environment, app_name, name).start
+          Lotus::Generators::Action.new(self, environment, app_name, name).start
         end
       end
 
@@ -95,8 +95,8 @@ DESC
         if options[:help] || name.nil?
           invoke :help, ['model']
         else
-          require 'lotus/commands/generate/model'
-          Lotus::Commands::Generate::Model.new(self, environment, name).start
+          require 'lotus/generators/model'
+          Lotus::Generators::Model.new(self, environment, name).start
         end
       end
 
@@ -109,93 +109,10 @@ DESC
         if options[:help] || name.nil?
           invoke :help, ['migration']
         else
-          require 'lotus/commands/generate/migration'
-          Lotus::Commands::Generate::Migration.new(self, environment, name).start
+          require 'lotus/generators/migration'
+          Lotus::Generators::Migration.new(self, environment, name).start
         end
       end
-
-
-#       # @since 0.3.0
-#       # @api private
-#       GENERATORS_NAMESPACE = "Lotus::Generators::%s".freeze
-#       APP_ARCHITECTURE = 'app'.freeze
-
-#       # @since 0.3.0
-#       # @api private
-#       class Error < ::StandardError
-#       end
-
-#       # @since 0.3.0
-#       # @api private
-#       attr_reader :cli, :source, :target, :app, :app_name, :name, :options, :env
-
-#       # @since 0.3.0
-#       # @api private
-#       def initialize(type, app_name, name, env, cli)
-#         @cli      = cli
-#         @env      = env
-#         @name     = name
-#         @options  = env.to_options.merge(cli.options)
-
-#         sanitize_input(app_name, name)
-#         @type     = type
-
-#         @source   = Pathname.new(::File.dirname(__FILE__) + "/../generators/#{ @type }/").realpath
-#         @target   = Pathname.pwd.realpath
-
-#         @app      = Utils::String.new(@app_name).classify
-#       end
-
-#       # @since 0.3.0
-#       # @api private
-#       def start
-#         generator.start
-#       rescue Error => e
-#         puts e.message
-#         exit 1
-#       end
-
-#       # @since 0.3.0
-#       # @api private
-#       def app_root
-#         @app_root ||= begin
-#           result = Pathname.new(@options[:apps_path])
-#           result = result.join(@app_name) if @env.container?
-#           result
-#         end
-#       end
-
-#       # @since 0.3.0
-#       # @api private
-#       def spec_root
-#         @spec_root ||= Pathname.new('spec')
-#       end
-
-#       # @since 0.3.1
-#       # @api private
-#       def model_root
-#         @model_root ||= Pathname.new(['lib', ::File.basename(Dir.getwd)]
-#           .join(::File::SEPARATOR))
-#       end
-
-#       private
-#       # @since 0.3.0
-#       # @api private
-#       def generator
-#         require "lotus/generators/#{ @type }"
-#         class_name = Utils::String.new(@type).classify
-#         Utils::Class.load!(GENERATORS_NAMESPACE % class_name).new(self)
-#       end
-
-#       def sanitize_input(app_name, name)
-#         if options[:architecture] == APP_ARCHITECTURE
-#           @app_name = nil
-#           @name     = app_name
-#         else
-#           @app_name = app_name
-#           @name     = name
-#         end
-#       end
 
       private
 

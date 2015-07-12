@@ -6,10 +6,10 @@ require 'lotus/application_name'
 module Lotus
   module Generators
     class Slice < Abstract
-      def initialize(command, environment)
+      def initialize(command, environment, name)
         super(command, environment)
 
-        application_name       = ApplicationName.new(options.fetch(:application))
+        application_name       = ApplicationName.new(name)
         @slice_name            = application_name.to_s
         @upcase_slice_name     = application_name.to_env_s
         @classified_slice_name = Utils::String.new(@slice_name).classify
@@ -19,7 +19,7 @@ module Lotus
 
         @slice_base_url        = options.fetch(:application_base_url)
 
-        cli.class.source_root(@source)
+        command.class.source_root(@source)
       end
 
       def start
@@ -55,12 +55,12 @@ module Lotus
         #
 
         # Add "require_relative '../apps/web/application'"
-        cli.inject_into_file target.join('config/environment.rb'), after: /require_relative '\.\.\/lib\/(.*)'/ do
+        command.inject_into_file target.join('config/environment.rb'), after: /require_relative '\.\.\/lib\/(.*)'/ do
           "\nrequire_relative '../apps/#{ opts[:slice_name] }/application'"
         end
 
         # Mount slice inside "Lotus::Container.configure"
-        cli.inject_into_file target.join('config/environment.rb'), after: /Lotus::Container.configure do/ do |match|
+        command.inject_into_file target.join('config/environment.rb'), after: /Lotus::Container.configure do/ do |match|
           "\n  mount #{ opts[:classified_slice_name] }::Application, at: '#{ opts[:slice_base_url] }'"
         end
 
@@ -69,7 +69,7 @@ module Lotus
         #
         ['development', 'test'].each do |environment|
           # Add WEB_SESSIONS_SECRET="abc123" (random hex)
-          cli.append_to_file target.join(".env.#{ environment }") do
+          command.append_to_file target.join(".env.#{ environment }") do
             %(#{ opts[:upcase_slice_name] }_SESSIONS_SECRET="#{ SecureRandom.hex(32) }"\n)
           end
         end
@@ -78,7 +78,7 @@ module Lotus
         # New files
         #
         templates.each do |src, dst|
-          cli.template(@source.join(src), @target.join(dst), opts)
+          command.template(@source.join(src), @target.join(dst), opts)
         end
 
         ##
@@ -86,7 +86,7 @@ module Lotus
         #
         empty_directories.flatten.each do |dir|
           gitkeep = '.gitkeep'
-          cli.template(@source.join(gitkeep), @target.join(dir, gitkeep), opts)
+          command.template(@source.join(gitkeep), @target.join(dir, gitkeep), opts)
         end
       end
     end
